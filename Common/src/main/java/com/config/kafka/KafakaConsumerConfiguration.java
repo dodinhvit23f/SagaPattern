@@ -52,5 +52,6 @@ public class KafakaConsumerConfiguration {
 		factory.setConsumerFactory(consumerFactory);
 		return factory;
 	}
+	
 
 }

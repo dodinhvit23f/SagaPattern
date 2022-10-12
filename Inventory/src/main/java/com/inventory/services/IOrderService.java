@@ -1,5 +1,10 @@
 package com.inventory.services;
 
-public interface IOrderService{
+import com.dto.OrderDTO;
 
+public interface IOrderService{
+	OrderDTO comfirmOrder(OrderDTO order);
+	void acceptedOrder(OrderDTO order);
+	void rejectOrder(OrderDTO order);
+	void cancelOrder(OrderDTO order);
 }

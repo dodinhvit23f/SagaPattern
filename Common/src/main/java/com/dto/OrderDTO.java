@@ -6,6 +6,7 @@ import javax.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Value;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class OrderDTO {
 	@Min(1)
 	private long productId;
@@ -32,6 +34,8 @@ public class OrderDTO {
 	@Min(1)
 	@Value("${some.key:1}")
 	private long quantity;
+	
+	private String id;
 	
 	private String status;
 }

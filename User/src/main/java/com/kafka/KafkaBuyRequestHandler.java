@@ -1,16 +1,25 @@
 package com.kafka;
 
+import java.time.Duration;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.event.ListenerContainerIdleEvent;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import com.common.KafkaTopic;
+import com.common.OrderStatus;
 import com.dto.OrderDTO;
+import com.service.UserService;
 
 import lombok.extern.log4j.Log4j2;
+
 @Log4j2
 @Component
 public class KafkaBuyRequestHandler {
@@ -33,6 +42,24 @@ public class KafkaBuyRequestHandler {
 			}
 
 		});
+	}
+
+	@KafkaListener(topics = KafkaTopic.CUSTOMER, groupId = "${spring.kafka.consumer.group-id}")
+	public void orderListener(ConsumerRecord<String, OrderDTO> record) {
+		final OrderDTO order = record.value();
+
+		switch (order.getStatus()) {
+
+		case OrderStatus.CONFIRM:
+			final OrderDTO orderRequest = UserService.ORDER_REQUEST.get(record.key());
+
+			if (!orderRequest.equals(order)) {
+				orderRequest.setStatus(OrderStatus.FAIL);
+			}
+			break;
+		case OrderStatus.REJECTED:
+
+		}
 	}
 
 }
